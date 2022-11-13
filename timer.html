@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiCounter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <style>
+        #controls {
+            position: absolute;
+            background-color: gray;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0.5rem;
+        }
+
+        #timerLayer {
+            
+        }
+
+        .row {
+            height: 100vh;
+        }
+
+        .playerBoard {
+            font-size: 5rem;
+        }
+
+        .playerBoard a {
+            color: black;
+            text-decoration: none;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+        }
+
+        .playerBoard p {
+            height: 50%;
+            transform: translate(0, 50%);
+        }
+
+        #playerBoard0 {
+            background-color: #b3de69;
+        }
+
+        #playerBoard1 {
+            background-color: #ffffb3;
+        }
+
+        #playerBoard2 {
+            background-color: #fb8072;
+        }
+
+        #playerBoard3 {
+            background-color: #80b1d3;
+        }
+
+        #playerBoard4 {
+            background-color: #8dd3c7;
+        }
+
+        #playerBoard5 {
+            background-color: #fdb462;
+        }
+
+        #playerBoard6 {
+            background-color: #fccde5;
+        }
+
+        #playerBoard7 {
+            background-color: #bc80bd;
+        }
+
+        #playerBoard8 {
+            background-color: #bebada;
+        }
+
+        #playerBoard9 {
+            background-color: #ffffff;
+        }
+
+        #menuLayer {
+            position: absolute;
+            background-color: coral;
+            width: 50%;
+            height: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .h50 {
+            height: 50vh;
+        }
+
+        .h33 {
+            height: 33vh;
+        }
+
+        .h25 {
+            height: 25vh;
+        }
+
+        .h20 {
+            height: 20vh
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<script>
+    let time = 90;
+    let players = 3;
+    let timerlist;
+    let state = "paused";
+    let activePlayer = 0;
+    let prevState;
+
+    async function countdown() {
+        while (state=="active") {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            let old = Math.floor(timerlist[activePlayer]);
+            timerlist[activePlayer]=timerlist[activePlayer]-0.1;
+            let recent = Math.floor(timerlist[activePlayer]);
+            if (old > recent) {
+                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[activePlayer])+"</p>";
+            }
+        }
+    }
+
+    function printTimer (t) {
+        let h = Math.floor(t/60/60);
+        let min = Math.floor((t-h*60*60)/60);
+        let s = Math.floor((t-h*60*60-min*60));
+
+        if (h==0) {
+            if (min==0) {
+                return((s).toString().padStart(2, "0")+" s");
+            }
+
+            return((min).toString().padStart(2, "0")+":"+(s).toString().padStart(2, "0")+" min");
+        }
+        
+        return((h).toString().padStart(2, "0")+":"+(min).toString().padStart(2, "0")+":"+(s).toString().padStart(2, "0")+" h");
+    }
+
+    function setup() {
+        timerlist = Array(players).fill(time);
+        document.getElementById("toggleTimerButton").innerHTML = "Start";
+
+        let row;
+        for (let i = 0; i<timerlist.length; i++) {
+            if (i%2==0) {
+                row = document.createElement("div");
+                row.classList.add("row", "h"+Math.floor(100/Math.ceil(players/2)));
+                document.getElementById("timerLayer").appendChild(row);
+            }
+
+            let playerBoard = document.createElement("div");
+            playerBoard.classList.add("col", "playerBoard", "text-center", "align-middle");
+            playerBoard.id="playerBoard"+i;
+            row.appendChild(playerBoard);
+            let link = document.createElement("a");
+            link.classList.add("changePlayerField");
+            link.onclick = function() {setPlayer(i);};
+            playerBoard.append(link);
+
+            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[i])+"</p>";
+        }
+    }
+
+    function setPlayer (playerID) {
+        activePlayer = playerID;
+    }
+
+    function toggleState() {
+        if (state=="active") {
+            stopTimer();
+        } else {
+            startTimer();
+        }
+    }
+
+    function stopTimer() {
+        state="paused";
+        document.getElementById("toggleTimerButton").innerHTML="Weiter";
+    }
+
+    function startTimer() {
+        state="active";
+        document.getElementById("toggleTimerButton").innerHTML="Pause";
+        countdown();
+    }
+
+    function openMenu() {
+        prevState = state;
+        stopTimer();
+
+        let menu = document.getElementById("menuLayer");
+        menu.classList.remove("d-none")
+    }
+
+    function closeMenu() {
+        let menu = document.getElementById("menuLayer");
+        menu.classList.add("d-none");
+
+        if (prevState=="active") {
+            startTimer();
+        }
+    }
+
+    function reset() {
+        document.querySelectorAll(".row").forEach(node => {
+            node.remove();
+        })
+        stopTimer();
+        setup();
+    }
+
+    window.onload = (event) => {
+        setup();
+    }
+</script>
+
+<body>
+    <div id="timerLayer">
+        <div id="controls" class="d-grid gap-2">
+            <button id="toggleTimerButton" onclick="toggleState();" class="btn btn-primary" type="button">Start</button>
+            <button id="resetTimerButton" onclick="reset();" class="btn btn-primary" type="button">Reset</button>
+            <button id="openMenuButton" onclick="openMenu();" class="btn btn-primary" type="button">Menü</button>
+        </div>    
+    </div>
+    <div id="menuLayer" class="d-none">
+        <button id="closeMenuButton" onclick="closeMenu();">Schließen</button>
+    </div>
+</body>
+</html>
