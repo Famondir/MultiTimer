@@ -25,7 +25,7 @@
         }
 
         .playerBoard {
-            font-size: 5rem;
+            font-size: 4rem;
         }
 
         .playerBoard a {
@@ -37,9 +37,9 @@
             cursor: pointer;
         }
 
-        .playerBoard p {
+        .playerBoard div {
             height: 50%;
-            transform: translate(0, 50%);
+            transform: translate(0, calc(50% + 0rem));
         }
 
         #playerBoard0 {
@@ -84,9 +84,8 @@
 
         #menuLayer {
             position: absolute;
-            background-color: coral;
-            width: 50%;
-            height: 50%;
+            background-color: white;
+            padding: 0.5rem;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -130,7 +129,7 @@
             timerlist[activePlayer]=timerlist[activePlayer]-0.1;
             let recent = Math.floor(timerlist[activePlayer]);
             if (old > recent) {
-                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[activePlayer])+"</p>";
+                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[activePlayer])+"</div>";
             }
         }
     }
@@ -154,6 +153,13 @@
     function setup() {
         timerlist = Array(players).fill(time);
         document.getElementById("toggleTimerButton").innerHTML = "Start";
+        document.getElementById("players").value = players;
+        let h = Math.floor(time/60/60);
+        let min = Math.floor((time-h*60*60)/60);
+        let s = Math.floor((time-h*60*60-min*60));
+        document.getElementById("hours").value = h;
+        document.getElementById("minutes").value = min;
+        document.getElementById("seconds").value = s;
 
         let row;
         for (let i = 0; i<timerlist.length; i++) {
@@ -172,7 +178,7 @@
             link.onclick = function() {setPlayer(i);};
             playerBoard.append(link);
 
-            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[i])+"</p>";
+            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[i])+"</div>";
         }
     }
 
@@ -220,8 +226,28 @@
         document.querySelectorAll(".row").forEach(node => {
             node.remove();
         })
+        activePlayer = 1;
         stopTimer();
         setup();
+    }
+
+    function changeInputValue(ID, byValue) {
+        let target = document.getElementById(ID);
+        let newValue = parseInt(target.value)+parseInt(byValue);
+        if (newValue <= parseInt(target.max) && newValue >= parseInt(target.min)) {
+            target.value = newValue;
+        }
+        console.log("Hey");
+    }
+
+    function saveSettings() {
+        players = parseInt(document.getElementById("players").value);
+        let h = parseInt(document.getElementById("hours").value);
+        let min = parseInt(document.getElementById("minutes").value);
+        let s = parseInt(document.getElementById("seconds").value);
+        time = 60*60*h+60*min+s;
+        reset();
+        closeMenu();
     }
 
     window.onload = (event) => {
@@ -238,7 +264,41 @@
         </div>    
     </div>
     <div id="menuLayer" class="d-none">
-        <button id="closeMenuButton" onclick="closeMenu();">Schließen</button>
+        <div class="d-flex justify-content-end">
+            <button id="closeMenuButton" class="btn-close" aria-label="Close" onclick="closeMenu();"></button>
+        </div>
+        
+        <h3>Spieleranzahl</h3>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="button" id="lessPlayers" onclick="changeInputValue('players', -1)">-1</button>
+            <input type="number" id="players" min="2" max="10" class="form-control" placeholder="Spieleranzahl" aria-label="Spieleranzahl">
+            <button class="btn btn-outline-secondary" type="button" id="morePlayers" onclick="changeInputValue('players', 1)">+1</button>
+        </div>
+        <h3>Timer</h3>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="button" id="lessHours10" onclick="changeInputValue('hours', -10)">-10</button>
+            <button class="btn btn-outline-secondary" type="button" id="lessHours" onclick="changeInputValue('hours', -1)">-1</button>
+            <input type="number" id="hours" min="0" max="24" class="form-control" placeholder="Stunden" aria-label="Stunden">
+            <button class="btn btn-outline-secondary" type="button" id="moreHours" onclick="changeInputValue('hours', 1)">+1</button>
+            <button class="btn btn-outline-secondary" type="button" id="moreHours10" onclick="changeInputValue('hours', 10)">+10</button>
+        </div>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="button" id="lessMinutes10" onclick="changeInputValue('minutes', -10)">-10</button>
+            <button class="btn btn-outline-secondary" type="button" id="lessMinutes" onclick="changeInputValue('minutes', -1)">-1</button>
+            <input type="number" id="minutes" min="0" max="60" class="form-control" placeholder="Minuten" aria-label="Minuten">
+            <button class="btn btn-outline-secondary" type="button" id="moreMInutes" onclick="changeInputValue('minutes', 1)">+1</button>
+            <button class="btn btn-outline-secondary" type="button" id="moreMInutes10" onclick="changeInputValue('minutes', 10)">+10</button>
+        </div>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="button" id="lessSeconds10" onclick="changeInputValue('seconds', -10)">-10</button>
+            <button class="btn btn-outline-secondary" type="button" id="lessSeconds" onclick="changeInputValue('seconds', -1)">-1</button>
+            <input type="number" id="seconds" min="0" max="60" class="form-control" placeholder="Sekunden" aria-label="Sekunden">
+            <button class="btn btn-outline-secondary" type="button" id="moreSeconds" onclick="changeInputValue('seconds', 1)">+1</button>
+            <button class="btn btn-outline-secondary" type="button" id="moreSeconds10" onclick="changeInputValue('seconds', 10)">+10</button>
+        </div>
+        <div class="d-grid">
+            <button id="saveAndClose" onclick="saveSettings();" class="btn btn-primary" type="button">Speichern & Schließen</button>
+        </div>
     </div>
 </body>
 </html>
