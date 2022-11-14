@@ -216,3 +216,8 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+export default function handler(req, res) {
+  const { name = 'World' } = req.query;
+  return res.send(`Hello ${name}!`);
+}
