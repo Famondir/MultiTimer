@@ -1,0 +1,11 @@
+{
+  "name": "TimerApp",
+  "version": "0.0.0",
+  "description": "Real time multiplayer timer for boardgames",
+  "dependencies": {
+    "express": "latest",
+    "jade": "^1.11.0",
+    "socket.io": "latest"
+  },
+  "author": "Famondir"
+}
