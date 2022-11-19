@@ -14,7 +14,6 @@ app.get("/", function(req, res){
 });
 app.use(express.static(__dirname + '/public'));
 
-
 console.log("Listening on port " + options["port"]);
 
 io.sockets.on('connection', function (socket) {
