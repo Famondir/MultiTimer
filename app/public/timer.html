@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MultiCounter</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <style>
+      #controls {
+        position: absolute;
+        background-color: gray;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.5rem;
+      }
+
+      #timerLayer {
+      }
+
+      .playerBoard .row {
+        height: 100vh;
+      }
+
+      .playerBoard {
+        font-size: 4rem;
+        position: relative;
+      }
+
+      .playerBoard a {
+        color: black;
+        text-decoration: none;
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: pointer;
+        position: absolute;
+      }
+
+      .playerBoard div {
+        height: 50%;
+        transform: translate(0, calc(50% + 0rem));
+      }
+
+      #playerBoard0 {
+        background-color: #b3de69;
+      }
+
+      #playerBoard1 {
+        background-color: #ffffb3;
+      }
+
+      #playerBoard2 {
+        background-color: #fb8072;
+      }
+
+      #playerBoard3 {
+        background-color: #80b1d3;
+      }
+
+      #playerBoard4 {
+        background-color: #8dd3c7;
+      }
+
+      #playerBoard5 {
+        background-color: #fdb462;
+      }
+
+      #playerBoard6 {
+        background-color: #fccde5;
+      }
+
+      #playerBoard7 {
+        background-color: #bc80bd;
+      }
+
+      #playerBoard8 {
+        background-color: #bebada;
+      }
+
+      #playerBoard9 {
+        background-color: #ffffff;
+      }
+
+      .playername {
+        font-size: 1rem;
+        position: absolute;
+        top: 1rem;
+        left: 2rem;
+      }
+
+      .menu {
+        position: absolute;
+        background-color: white;
+        padding: 0.5rem;
+        top: 50%;
+        left: 50%;
+        width: 90vw;
+        max-height: 90vh;
+        height: auto;
+        transform: translate(-50%, -50%);
+      }
+
+      #controls {
+      }
+
+      #menuLayer .row {
+        height: inherit;
+      }
+
+      .h50 {
+        height: 50vh;
+      }
+
+      .h33 {
+        height: 33vh;
+      }
+
+      .h25 {
+        height: 25vh;
+      }
+
+      .h20 {
+        height: 20vh;
+      }
+
+      body {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
+
+    <div id="timerLayer"></div>
+    <div id="controls" class="d-grid gap-2">
+      <button
+        id="toggleTimerButton"
+        onclick="toggleState();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Start
+      </button>
+      <button
+        id="resetTimerButton"
+        onclick="reset();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Reset
+      </button>
+      <button
+        id="openMenuButton"
+        onclick="openMenu();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Menü
+      </button>
+    </div>
+    <div id="menuLayer" class="d-none menu">
+      <div class="d-flex justify-content-end">
+        <button
+          id="closeMenuButton"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closeMenu();"
+        ></button>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>Spieleranzahl</h3>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessPlayers"
+              onclick="changeInputValue('players', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="players"
+              min="2"
+              max="10"
+              class="form-control"
+              placeholder="Spieleranzahl"
+              aria-label="Spieleranzahl"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="morePlayers"
+              onclick="changeInputValue('players', 1)"
+            >
+              +1
+            </button>
+          </div>
+          <div class="d-grid">
+            <button
+              id="playerNameMenu"
+              onclick="openNameMenu();"
+              class="btn btn-primary"
+              type="button"
+            >
+              Spielernamen
+            </button>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <h3>Timer</h3>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessHours10"
+              onclick="changeInputValue('hours', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessHours"
+              onclick="changeInputValue('hours', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="hours"
+              min="0"
+              max="24"
+              class="form-control"
+              placeholder="Stunden"
+              aria-label="Stunden"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreHours"
+              onclick="changeInputValue('hours', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreHours10"
+              onclick="changeInputValue('hours', 10)"
+            >
+              +10
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessMinutes10"
+              onclick="changeInputValue('minutes', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessMinutes"
+              onclick="changeInputValue('minutes', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="minutes"
+              min="0"
+              max="60"
+              class="form-control"
+              placeholder="Minuten"
+              aria-label="Minuten"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreMInutes"
+              onclick="changeInputValue('minutes', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreMInutes10"
+              onclick="changeInputValue('minutes', 10)"
+            >
+              +10
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessSeconds10"
+              onclick="changeInputValue('seconds', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessSeconds"
+              onclick="changeInputValue('seconds', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="seconds"
+              min="0"
+              max="60"
+              class="form-control"
+              placeholder="Sekunden"
+              aria-label="Sekunden"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreSeconds"
+              onclick="changeInputValue('seconds', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreSeconds10"
+              onclick="changeInputValue('seconds', 10)"
+            >
+              +10
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid">
+        <button
+          id="saveAndClose"
+          onclick="saveSettings();"
+          class="btn btn-primary"
+          type="button"
+        >
+          Speichern & Schließen
+        </button>
+      </div>
+    </div>
+    <div id="playerNames" class="d-none menu">
+      <div class="d-flex justify-content-end">
+        <button
+          id="closeNameButton"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closeNameMenu();"
+        ></button>
+      </div>
+      <div id="playerNameForm"></div>
+      <div class="d-grid">
+        <button
+          id="saveNames"
+          onclick="saveNames();"
+          class="btn btn-primary"
+          type="button"
+        >
+          Speichern & Schließen
+        </button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+/*     
+      var messages = document.getElementById('messages');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+    
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat message', input.value);
+          input.value = '';
+        }
+      });
+    
+      socket.on('chat message', function(msg) {
+        var item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+ */      
+    </script>
+  </body>
+</html>
