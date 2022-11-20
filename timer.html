@@ -39,9 +39,9 @@
             position: absolute;
         }
 
-        .playerBoard div {
+        .playerBoard p {
             height: 50%;
-            transform: translate(0, calc(50% + 0rem));
+            transform: translate(0, calc(100% - 4rem));
         }
 
         #playerBoard0 {
@@ -150,7 +150,7 @@
             timerlist[activePlayer]=timerlist[activePlayer]-0.1;
             let recent = Math.floor(timerlist[activePlayer]);
             if (old > recent) {
-                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[activePlayer])+"</div>";
+                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[activePlayer])+"</p>";
             }
         }
     }
@@ -199,7 +199,7 @@
             }
 
             let playerBoard = document.createElement("div");
-            playerBoard.classList.add("col", "playerBoard", "text-center", "align-middle");
+            playerBoard.classList.add("col", "playerBoard", "text-center");
             playerBoard.id="playerBoard"+i;
             row.appendChild(playerBoard);
             let name = document.createElement("span")
@@ -221,7 +221,7 @@
             nameInput.placeholder="Spieler:in "+(i+1);
             nameCol.appendChild(nameInput);
 
-            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[i])+"</div>";
+            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[i])+"</p>";
         }
     }
 

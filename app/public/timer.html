@@ -24,12 +24,13 @@
       #timerLayer {
       }
 
-      .playerBoard .row {
+      #timerLayer .row {
         height: 100vh;
+        margin: 0;
       }
 
       .playerBoard {
-        font-size: 4rem;
+        font-size: 2rem;
         position: relative;
       }
 
@@ -43,9 +44,23 @@
         position: absolute;
       }
 
-      .playerBoard div {
+      .playerBoard a.active {
+        box-shadow: inset 0 0 10px #222;
+      }
+      
+      .playerBoard .timeDisplay {
         height: 50%;
-        transform: translate(0, calc(50% + 0rem));
+        transform: translate(0, calc(100% - 2rem));
+      }
+
+      @media (min-width: 992px) {
+        .playerBoard {
+        font-size: 3rem;
+      }
+      
+      .playerBoard .timeDisplay {
+        transform: translate(0, calc(100% - 3rem));
+      }
       }
 
       #playerBoard0 {
@@ -93,6 +108,11 @@
         position: absolute;
         top: 1rem;
         left: 2rem;
+        width: calc(100% - 4rem);
+      }
+      
+      .playername.right {
+        right: calc(-100% + 10rem);
       }
 
       .menu {
@@ -114,24 +134,28 @@
         height: inherit;
       }
 
-      .h50 {
+      #timerLayer .row.h50 {
         height: 50vh;
       }
 
-      .h33 {
+      #timerLayer .row.h33 {
         height: 33vh;
       }
 
-      .h25 {
+      #timerLayer .row.h25 {
         height: 25vh;
       }
 
-      .h20 {
+      #timerLayer .row.h20 {
         height: 20vh;
       }
 
+      #timerLayer .row>* {
+        padding: 0;
+      }
+
       body {
-        overflow: hidden;
+        overflow: auto;
       }
     </style>
   </head>
@@ -389,101 +413,249 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-            "use strict"
+      "use strict";
 
-            var socket = io();
+      var socket = io();
+      const menu = document.getElementById("menuLayer");
+      const toggleTimerButton = document.getElementById("toggleTimerButton");
+      const players = document.getElementById("players");
+      const hours = document.getElementById("hours");
+      const minutes = document.getElementById("minutes");
+      const seconds = document.getElementById("seconds");
+      const timerLayer = document.getElementById("timerLayer");
+      const playerNameForm = document.getElementById("playerNameForm");
+      const nameMenu = document.getElementById("playerNames");
 
-            socket.on('timer object transfer', function(timer) {
-              setup(timer);
-            });
+      socket.on("timer object transfer", function (timer) {
+        setup(timer);
+      });
 
-            function chooseStartStopButtonLabel(state) {
-              if (state == "init") return("Start");
-              if (state == "active") return("Pause");
-              if (state == "paused") return("Weiter");
-            }
+      socket.on("timer status updated", function (state) {
+        toggleTimerButton.innerHTML =
+          chooseStartStopButtonLabel(state);
+      });
 
-            function fillMenuInputs(timer) {
-              document.getElementById("players").value = timer.players;
+      socket.on("active player changes", function (playerID) {
+        console.log("Highlighting active player not implemented yet.");
+        document.getElementsByClassName("active")[0].classList.remove("active");
+        document
+          .getElementById("playerBoard" + playerID)
+          .getElementsByClassName("changePlayerField")[0].classList.add("active");
+      });
 
-              const timeTripel = getTimeTriple(timer.time);
-              document.getElementById("hours").value = timeTripel.h;
-              document.getElementById("minutes").value = timeTripel.min;
-              document.getElementById("seconds").value = timeTripel.s;
-            }
+      socket.on("player timer display update", function (tuple) {
+        document
+          .getElementById("playerBoard" + tuple[0])
+          .getElementsByClassName("changePlayerField")[0].innerHTML =
+          "<p class='timeDisplay text-center'>" +
+          printTimer(getTimeTriple(tuple[1])) +
+          "</p>";
+      });
 
-            function getTimeTriple(time) {
-              let h = Math.floor(time/60/60);
-              let min = Math.floor((time-h*60*60)/60);
-              let s = Math.floor((time-h*60*60-min*60));
+      socket.on("changed playernames", function (playerList) {
+        let playerNumber = playerList.length;
 
-              const timeTripel = {h: h, min: min, s: s};
-              return(timeTripel);
-            }
+        for (let i=0; i<playerNumber; i++) {
+          document.getElementById("playerName"+i).innerText = playerList[i];
+          document.getElementById("nameInput"+i).value = playerList[i];
+        }
+      });
 
-            function setup(timer) {              
-              document.getElementById("toggleTimerButton").innerHTML = chooseStartStopButtonLabel(timer.state);
-              fillMenuInputs(timer);
+      function chooseStartStopButtonLabel(state) {
+        if (state == "init") return "Start";
+        if (state == "active") return "Pause";
+        if (state == "paused") return "Weiter";
+      }
 
-              let row;
-              let nameRow;
-              for (let i = 0; i<timer.timerlist.length; i++) {
-                  if (i%2==0) {
-                      row = document.createElement("div");
-                      row.classList.add("row", "h"+Math.floor(100/Math.ceil(players/2)));
-                      document.getElementById("timerLayer").appendChild(row);
+      function fillMenuInputs(timer) {
+        players.value = timer.playerNumber;
 
-                      nameRow = document.createElement("div");
-                      nameRow.classList.add("row");
-                      document.getElementById("playerNameForm").appendChild(nameRow);
-                  }
+        const timeTripel = getTimeTriple(timer.time);
+        hours.value = timeTripel.h;
+        minutes.value = timeTripel.min;
+        seconds.value = timeTripel.s;
+      }
 
-                  let playerBoard = document.createElement("div");
-                  playerBoard.classList.add("col", "playerBoard", "text-center", "align-middle");
-                  playerBoard.id="playerBoard"+i;
-                  row.appendChild(playerBoard);
-                  let name = document.createElement("span")
-                  name.innerText = playerList[i];
-                  name.classList.add("playername");
-                  name.id="playerName"+i;
-                  playerBoard.append(name);
-                  let link = document.createElement("a");
-                  link.classList.add("changePlayerField");
-                  link.onclick = function() {setPlayer(i);};
-                  playerBoard.append(link);
+      function getTimeTriple(time) {
+        let h = Math.floor(time / 60 / 60);
+        let min = Math.floor((time - h * 60 * 60) / 60);
+        let s = Math.floor(time - h * 60 * 60 - min * 60);
 
-                  let nameCol = document.createElement("div");
-                  nameCol.classList.add("col");
-                  nameRow.appendChild(nameCol);
-                  let nameInput = document.createElement("input");
-                  nameInput.type="text";
-                  nameInput.id="nameInput"+i;
-                  nameInput.placeholder="Spieler:in "+(i+1);
-                  nameCol.appendChild(nameInput);
+        const timeTripel = { h: h, min: min, s: s };
+        return timeTripel;
+      }
 
-                  document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[i])+"</div>";
-              }
+      function setup(timer) {
+        console.log(timer);
+        document.querySelectorAll("#timerLayer .row").forEach(node => {
+            node.remove();
+        })
+        document.querySelectorAll("#playerNameForm .row").forEach(node => {
+            node.remove();
+        })
+
+        toggleTimerButton.innerHTML =
+          chooseStartStopButtonLabel(timer.state);
+        fillMenuInputs(timer);
+
+        let row;
+        let nameRow;
+        for (let i = 0; i < timer.timerlist.length; i++) {
+          if (i % 2 == 0) {
+            row = document.createElement("div");
+            row.classList.add(
+              "row",
+              "h" + Math.floor(100 / Math.ceil(timer.playerNumber / 2))
+            );
+            timerLayer.appendChild(row);
+
+            nameRow = document.createElement("div");
+            nameRow.classList.add("row");
+            playerNameForm.appendChild(nameRow);
           }
-      /*
-            var messages = document.getElementById('messages');
-            var form = document.getElementById('form');
-            var input = document.getElementById('input');
 
-            form.addEventListener('submit', function(e) {
-              e.preventDefault();
-              if (input.value) {
-                socket.emit('chat message', input.value);
-                input.value = '';
-              }
-            });
+          let playerBoard = document.createElement("div");
+          playerBoard.classList.add(
+            "col",
+            "playerBoard"
+          );
+          playerBoard.id = "playerBoard" + i;
+          row.appendChild(playerBoard);
 
-            socket.on('chat message', function(msg) {
-              var item = document.createElement('li');
-              item.textContent = msg;
-              messages.appendChild(item);
-              window.scrollTo(0, document.body.scrollHeight);
-            });
-       */
+          let name = document.createElement("p");
+          name.innerText = timer.playerList[i];
+          name.classList.add("playername");
+          if (i%2 == 0) name.classList.add("text-start");
+          else name.classList.add("text-end");
+          name.id = "playerName" + i;
+          playerBoard.append(name);
+
+          let link = document.createElement("a");
+          link.classList.add("changePlayerField");
+          link.onclick = function () {
+            setPlayer(i);
+          };
+          playerBoard.append(link);
+
+          let nameCol = document.createElement("div");
+          nameCol.classList.add("col");
+          nameRow.appendChild(nameCol);
+          let nameInput = document.createElement("input");
+          nameInput.type = "text";
+          nameInput.id = "nameInput" + i;
+          nameInput.value = timer.playerList[i];
+          nameInput.placeholder = "Spieler:in " + (i + 1);
+          nameCol.appendChild(nameInput);
+
+          document
+            .getElementById("playerBoard" + i)
+            .getElementsByClassName("changePlayerField")[0].innerHTML =
+            "<p class='timeDisplay text-center'>" +
+            printTimer(getTimeTriple(timer.timerlist[i])) +
+            "</p>";
+        }
+
+        document
+          .getElementById("playerBoard" + timer.activePlayer)
+          .getElementsByClassName("changePlayerField")[0].classList.add("active");
+      }
+
+      function setPlayer(playerID) {
+        socket.emit("active player changes", playerID);
+      }
+
+      function printTimer(timeTripel) {
+        let h = timeTripel.h;
+        let min = timeTripel.min;
+        let s = timeTripel.s;
+
+        if (h == 0) {
+          if (min == 0) {
+            return s.toString().padStart(2, "0") + " s";
+          }
+
+          return (
+            min.toString().padStart(2, "0") +
+            ":" +
+            s.toString().padStart(2, "0") +
+            " min"
+          );
+        }
+
+        return (
+          h.toString().padStart(2, "0") +
+          ":" +
+          min.toString().padStart(2, "0") +
+          ":" +
+          s.toString().padStart(2, "0") +
+          " h"
+        );
+      }
+
+      function toggleState() {
+        socket.emit("toogle timer state");
+      }
+
+      function reset() {
+        socket.emit("reset timer");
+      }
+
+      function openMenu() {
+        
+        menu.classList.remove("d-none");
+    }
+
+    function closeMenu() {
+      menu.classList.add("d-none");
+    }
+
+    function changeInputValue(ID, byValue) {
+        let target = document.getElementById(ID);
+        let newValue = parseInt(target.value)+parseInt(byValue);
+        if (newValue <= parseInt(target.max) && newValue >= parseInt(target.min)) {
+            target.value = newValue;
+        }
+    }
+
+    function saveSettings() {
+        let playerNumber = parseInt(document.getElementById("players").value);
+        let h = parseInt(document.getElementById("hours").value);
+        let min = parseInt(document.getElementById("minutes").value);
+        let s = parseInt(document.getElementById("seconds").value);
+        let time = 60*60*h+60*min+s;
+        setPlayerNumber(playerNumber);
+        setTime(time);
+        reset();
+        closeMenu();
+    }
+
+    function setPlayerNumber(playerNumber) {
+      socket.emit("set player number", playerNumber);
+    }
+
+    function setTime(time) {
+      socket.emit("set time", time);
+    }
+
+    function openNameMenu() {
+        nameMenu.classList.remove("d-none");
+        closeMenu();
+    }
+
+    function closeNameMenu() {
+        nameMenu.classList.add("d-none");
+        openMenu();
+    }
+
+    function saveNames() {
+      let playerNumber = document.querySelectorAll(".playerBoard").length;
+      let playerList = Array(playerNumber);
+        for (let i=0; i<playerNumber; i++) {
+            playerList[i] = document.getElementById("nameInput"+i).value;
+            socket.emit("changed playernames", playerList);
+        }
+        closeNameMenu();
+    }
     </script>
   </body>
 </html>
