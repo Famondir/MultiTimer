@@ -389,27 +389,101 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
-/*     
-      var messages = document.getElementById('messages');
-      var form = document.getElementById('form');
-      var input = document.getElementById('input');
-    
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (input.value) {
-          socket.emit('chat message', input.value);
-          input.value = '';
-        }
-      });
-    
-      socket.on('chat message', function(msg) {
-        var item = document.createElement('li');
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-      });
- */      
+            "use strict"
+
+            var socket = io();
+
+            socket.on('timer object transfer', function(timer) {
+              setup(timer);
+            });
+
+            function chooseStartStopButtonLabel(state) {
+              if (state == "init") return("Start");
+              if (state == "active") return("Pause");
+              if (state == "paused") return("Weiter");
+            }
+
+            function fillMenuInputs(timer) {
+              document.getElementById("players").value = timer.players;
+
+              const timeTripel = getTimeTriple(timer.time);
+              document.getElementById("hours").value = timeTripel.h;
+              document.getElementById("minutes").value = timeTripel.min;
+              document.getElementById("seconds").value = timeTripel.s;
+            }
+
+            function getTimeTriple(time) {
+              let h = Math.floor(time/60/60);
+              let min = Math.floor((time-h*60*60)/60);
+              let s = Math.floor((time-h*60*60-min*60));
+
+              const timeTripel = {h: h, min: min, s: s};
+              return(timeTripel);
+            }
+
+            function setup(timer) {              
+              document.getElementById("toggleTimerButton").innerHTML = chooseStartStopButtonLabel(timer.state);
+              fillMenuInputs(timer);
+
+              let row;
+              let nameRow;
+              for (let i = 0; i<timer.timerlist.length; i++) {
+                  if (i%2==0) {
+                      row = document.createElement("div");
+                      row.classList.add("row", "h"+Math.floor(100/Math.ceil(players/2)));
+                      document.getElementById("timerLayer").appendChild(row);
+
+                      nameRow = document.createElement("div");
+                      nameRow.classList.add("row");
+                      document.getElementById("playerNameForm").appendChild(nameRow);
+                  }
+
+                  let playerBoard = document.createElement("div");
+                  playerBoard.classList.add("col", "playerBoard", "text-center", "align-middle");
+                  playerBoard.id="playerBoard"+i;
+                  row.appendChild(playerBoard);
+                  let name = document.createElement("span")
+                  name.innerText = playerList[i];
+                  name.classList.add("playername");
+                  name.id="playerName"+i;
+                  playerBoard.append(name);
+                  let link = document.createElement("a");
+                  link.classList.add("changePlayerField");
+                  link.onclick = function() {setPlayer(i);};
+                  playerBoard.append(link);
+
+                  let nameCol = document.createElement("div");
+                  nameCol.classList.add("col");
+                  nameRow.appendChild(nameCol);
+                  let nameInput = document.createElement("input");
+                  nameInput.type="text";
+                  nameInput.id="nameInput"+i;
+                  nameInput.placeholder="Spieler:in "+(i+1);
+                  nameCol.appendChild(nameInput);
+
+                  document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<div class='align-middle'>"+printTimer(timerlist[i])+"</div>";
+              }
+          }
+      /*
+            var messages = document.getElementById('messages');
+            var form = document.getElementById('form');
+            var input = document.getElementById('input');
+
+            form.addEventListener('submit', function(e) {
+              e.preventDefault();
+              if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+              }
+            });
+
+            socket.on('chat message', function(msg) {
+              var item = document.createElement('li');
+              item.textContent = msg;
+              messages.appendChild(item);
+              window.scrollTo(0, document.body.scrollHeight);
+            });
+       */
     </script>
   </body>
 </html>
