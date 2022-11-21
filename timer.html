@@ -1,141 +1,172 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MultiCounter</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
     <style>
-        #controls {
-            position: absolute;
-            background-color: gray;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 0.5rem;
-        }
+      #controls {
+        position: absolute;
+        background-color: gray;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.5rem;
+      }
 
-        #timerLayer {
-            
-        }
+      #timerLayer {
+      }
 
-        .playerBoard .row {
-            height: 100vh;
-        }
+      #timerLayer .row {
+        height: 100vh;
+        margin: 0;
+      }
 
+      .playerBoard {
+        font-size: 2rem;
+        position: relative;
+      }
+
+      .playerBoard a {
+        color: black;
+        text-decoration: none;
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: pointer;
+        position: absolute;
+      }
+
+      .playerBoard a.active {
+        box-shadow: inset 0 0 10px #222;
+      }
+
+      .playerBoard .timeDisplay {
+        height: 50%;
+        transform: translate(0, calc(100% - 2rem));
+      }
+
+      @media (min-width: 992px) {
         .playerBoard {
-            font-size: 4rem;
-            position: relative;
+          font-size: 3rem;
         }
 
-        .playerBoard a {
-            color: black;
-            text-decoration: none;
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: pointer;
-            position: absolute;
+        .playerBoard .timeDisplay {
+          transform: translate(0, calc(100% - 3rem));
         }
+      }
 
-        .playerBoard p {
-            height: 50%;
-            transform: translate(0, calc(100% - 4rem));
-        }
+      #playerBoard0 {
+        background-color: #b3de69;
+      }
 
-        #playerBoard0 {
-            background-color: #b3de69;
-        }
+      #playerBoard1 {
+        background-color: #ffffb3;
+      }
 
-        #playerBoard1 {
-            background-color: #ffffb3;
-        }
+      #playerBoard2 {
+        background-color: #fb8072;
+      }
 
-        #playerBoard2 {
-            background-color: #fb8072;
-        }
+      #playerBoard3 {
+        background-color: #80b1d3;
+      }
 
-        #playerBoard3 {
-            background-color: #80b1d3;
-        }
+      #playerBoard4 {
+        background-color: #8dd3c7;
+      }
 
-        #playerBoard4 {
-            background-color: #8dd3c7;
-        }
+      #playerBoard5 {
+        background-color: #fdb462;
+      }
 
-        #playerBoard5 {
-            background-color: #fdb462;
-        }
+      #playerBoard6 {
+        background-color: #fccde5;
+      }
 
-        #playerBoard6 {
-            background-color: #fccde5;
-        }
+      #playerBoard7 {
+        background-color: #bc80bd;
+      }
 
-        #playerBoard7 {
-            background-color: #bc80bd;
-        }
+      #playerBoard8 {
+        background-color: #bebada;
+      }
 
-        #playerBoard8 {
-            background-color: #bebada;
-        }
+      #playerBoard9 {
+        background-color: #ffffff;
+      }
 
-        #playerBoard9 {
-            background-color: #ffffff;
-        }
+      .playername {
+        font-size: 1rem;
+        position: absolute;
+        top: 1rem;
+        left: 2rem;
+        width: calc(100% - 4rem);
+      }
 
-        .playername {
-            font-size: 1rem;
-            position: absolute;
-            top: 1rem;
-            left: 2rem;
-        }
+      .playername.right {
+        right: calc(-100% + 10rem);
+      }
 
-        .menu {
-            position: absolute;
-            background-color: white;
-            padding: 0.5rem;
-            top: 50%;
-            left: 50%;
-            width: 90vw;
-            max-height: 90vh;
-            height: auto;
-            transform: translate(-50%, -50%);
-        }
+      .menu {
+        position: absolute;
+        background-color: white;
+        padding: 0.5rem;
+        top: 50%;
+        left: 50%;
+        width: 90vw;
+        max-height: 90vh;
+        height: auto;
+        transform: translate(-50%, -50%);
+      }
 
-        #controls {
-            
-        }
+      #controls {
+      }
 
-        #menuLayer .row {
-            height: inherit;
-        }
+      #menuLayer .row {
+        height: inherit;
+      }
 
-        .h50 {
-            height: 50vh;
-        }
+      #timerLayer .row.h50 {
+        height: 50vh;
+      }
 
-        .h33 {
-            height: 33vh;
-        }
+      #timerLayer .row.h33 {
+        height: 33vh;
+      }
 
-        .h25 {
-            height: 25vh;
-        }
+      #timerLayer .row.h25 {
+        height: 25vh;
+      }
 
-        .h20 {
-            height: 20vh
-        }
+      #timerLayer .row.h20 {
+        height: 20vh;
+      }
 
-        body {
-            overflow: hidden;
-        }
+      #timerLayer .row > * {
+        padding: 0;
+      }
+
+      body {
+        overflow: auto;
+      }
     </style>
-</head>
+  </head>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-<script>
-    let time = 30*60;
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    let time = 30 * 60;
     let players = 3;
     let timerlist;
     let state = "paused";
@@ -144,244 +175,462 @@
     let playerList = Array(players).fill("Spieler:in");
 
     async function countdown() {
-        while (state=="active") {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            let old = Math.floor(timerlist[activePlayer]);
-            timerlist[activePlayer]=timerlist[activePlayer]-0.1;
-            let recent = Math.floor(timerlist[activePlayer]);
-            if (old > recent) {
-                document.getElementById("playerBoard"+activePlayer).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[activePlayer])+"</p>";
-            }
+      while (state == "active") {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        let old = Math.floor(timerlist[activePlayer]);
+        timerlist[activePlayer] = timerlist[activePlayer] - 0.1;
+        let recent = Math.floor(timerlist[activePlayer]);
+        if (old > recent) {
+          document
+            .getElementById("playerBoard" + activePlayer)
+            .getElementsByClassName("changePlayerField")[0].innerHTML =
+            "<p class='timeDisplay text-center'>" + printTimer(timerlist[activePlayer]) + "</p>";
         }
+      }
     }
 
-    function printTimer (t) {
-        let h = Math.floor(t/60/60);
-        let min = Math.floor((t-h*60*60)/60);
-        let s = Math.floor((t-h*60*60-min*60));
+    function printTimer(t) {
+      let h = Math.floor(t / 60 / 60);
+      let min = Math.floor((t - h * 60 * 60) / 60);
+      let s = Math.floor(t - h * 60 * 60 - min * 60);
 
-        if (h==0) {
-            if (min==0) {
-                return((s).toString().padStart(2, "0")+" s");
-            }
-
-            return((min).toString().padStart(2, "0")+":"+(s).toString().padStart(2, "0")+" min");
+      if (h == 0) {
+        if (min == 0) {
+          return s.toString().padStart(2, "0") + " s";
         }
-        
-        return((h).toString().padStart(2, "0")+":"+(min).toString().padStart(2, "0")+":"+(s).toString().padStart(2, "0")+" h");
+
+        return (
+          min.toString().padStart(2, "0") +
+          ":" +
+          s.toString().padStart(2, "0") +
+          " min"
+        );
+      }
+
+      return (
+        h.toString().padStart(2, "0") +
+        ":" +
+        min.toString().padStart(2, "0") +
+        ":" +
+        s.toString().padStart(2, "0") +
+        " h"
+      );
     }
 
     function setup() {
-        timerlist = Array(players).fill(time);
-        document.getElementById("toggleTimerButton").innerHTML = "Start";
-        document.getElementById("players").value = players;
-        let h = Math.floor(time/60/60);
-        let min = Math.floor((time-h*60*60)/60);
-        let s = Math.floor((time-h*60*60-min*60));
-        document.getElementById("hours").value = h;
-        document.getElementById("minutes").value = min;
-        document.getElementById("seconds").value = s;
+      timerlist = Array(players).fill(time);
+      playerList = Array(players).fill("Spieler:in");
+      document.getElementById("toggleTimerButton").innerHTML = "Start";
+      document.getElementById("players").value = players;
+      let h = Math.floor(time / 60 / 60);
+      let min = Math.floor((time - h * 60 * 60) / 60);
+      let s = Math.floor(time - h * 60 * 60 - min * 60);
+      document.getElementById("hours").value = h;
+      document.getElementById("minutes").value = min;
+      document.getElementById("seconds").value = s;
 
-        let nameMenu = document.getElementById("playerNameForm");
-        let timerLayer = document.getElementById("timerLayer");
+      let nameMenu = document.getElementById("playerNameForm");
+      let timerLayer = document.getElementById("timerLayer");
 
-        let row;
-        let nameRow;
-        for (let i = 0; i<timerlist.length; i++) {
-            if (i%2==0) {
-                row = document.createElement("div");
-                row.classList.add("row", "h"+Math.floor(100/Math.ceil(players/2)));
-                timerLayer.appendChild(row);
+      let row;
+      let nameRow;
+      for (let i = 0; i < timerlist.length; i++) {
+        if (i % 2 == 0) {
+          row = document.createElement("div");
+          row.classList.add(
+            "row",
+            "h" + Math.floor(100 / Math.ceil(players / 2))
+          );
+          timerLayer.appendChild(row);
 
-                nameRow = document.createElement("div");
-                nameRow.classList.add("row");
-                nameMenu.appendChild(nameRow);
-            }
-
-            let playerBoard = document.createElement("div");
-            playerBoard.classList.add("col", "playerBoard", "text-center");
-            playerBoard.id="playerBoard"+i;
-            row.appendChild(playerBoard);
-            let name = document.createElement("span")
-            name.innerText = playerList[i];
-            name.classList.add("playername");
-            name.id="playerName"+i;
-            playerBoard.append(name);
-            let link = document.createElement("a");
-            link.classList.add("changePlayerField");
-            link.onclick = function() {setPlayer(i);};
-            playerBoard.append(link);
-
-            let nameCol = document.createElement("div");
-            nameCol.classList.add("col");
-            nameRow.appendChild(nameCol);
-            let nameInput = document.createElement("input");
-            nameInput.type="text";
-            nameInput.id="nameInput"+i;
-            nameInput.placeholder="Spieler:in "+(i+1);
-            nameCol.appendChild(nameInput);
-
-            document.getElementById("playerBoard"+i).getElementsByClassName("changePlayerField")[0].innerHTML = "<p>"+printTimer(timerlist[i])+"</p>";
+          nameRow = document.createElement("div");
+          nameRow.classList.add("row");
+          nameMenu.appendChild(nameRow);
         }
+
+        let playerBoard = document.createElement("div");
+        playerBoard.classList.add("col", "playerBoard", "text-center");
+        playerBoard.id = "playerBoard" + i;
+        row.appendChild(playerBoard);
+        let name = document.createElement("span");
+        name.innerText = playerList[i];
+        name.classList.add("playername");
+        if (i % 2 == 0) name.classList.add("text-start");
+        else name.classList.add("text-end");
+        name.id = "playerName" + i;
+        playerBoard.append(name);
+        let link = document.createElement("a");
+        link.classList.add("changePlayerField");
+        link.onclick = function () {
+          setPlayer(i);
+        };
+        playerBoard.append(link);
+
+        let nameCol = document.createElement("div");
+        nameCol.classList.add("col");
+        nameRow.appendChild(nameCol);
+        let nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.id = "nameInput" + i;
+        nameInput.placeholder = "Spieler:in " + (i + 1);
+        nameCol.appendChild(nameInput);
+
+        document
+          .getElementById("playerBoard" + i)
+          .getElementsByClassName("changePlayerField")[0].innerHTML =
+          "<p class='timeDisplay text-center'>" + printTimer(timerlist[i]) + "</p>";
+      }
+      
+      document
+          .getElementById("playerBoard" + activePlayer)
+          .getElementsByClassName("changePlayerField")[0]
+          .classList.add("active");
     }
 
-    function setPlayer (playerID) {
-        activePlayer = playerID;
+    function setPlayer(playerID) {
+      activePlayer = playerID;
+      document.getElementsByClassName("active")[0].classList.remove("active");
+      document
+          .getElementById("playerBoard" + activePlayer)
+          .getElementsByClassName("changePlayerField")[0]
+          .classList.add("active");
     }
 
     function toggleState() {
-        if (state=="active") {
-            stopTimer();
-        } else {
-            startTimer();
-        }
+      if (state == "active") {
+        stopTimer();
+      } else {
+        startTimer();
+      }
     }
 
     function stopTimer() {
-        state="paused";
-        document.getElementById("toggleTimerButton").innerHTML="Weiter";
+      state = "paused";
+      document.getElementById("toggleTimerButton").innerHTML = "Weiter";
     }
 
     function startTimer() {
-        state="active";
-        document.getElementById("toggleTimerButton").innerHTML="Pause";
-        countdown();
+      state = "active";
+      document.getElementById("toggleTimerButton").innerHTML = "Pause";
+      countdown();
     }
 
     function openMenu() {
-        prevState = state;
-        stopTimer();
+      prevState = state;
+      stopTimer();
 
-        let menu = document.getElementById("menuLayer");
-        menu.classList.remove("d-none");
+      let menu = document.getElementById("menuLayer");
+      menu.classList.remove("d-none");
     }
 
     function closeMenu() {
-        let menu = document.getElementById("menuLayer");
-        menu.classList.add("d-none");
+      let menu = document.getElementById("menuLayer");
+      menu.classList.add("d-none");
 
-        if (prevState=="active") {
-            startTimer();
-        }
+      if (prevState == "active") {
+        startTimer();
+      }
     }
 
     function reset() {
-        document.querySelectorAll("#timerLayer .row").forEach(node => {
-            node.remove();
-        })
-        activePlayer = 0;
-        stopTimer();
-        setup();
+      document.querySelectorAll("#timerLayer .row").forEach((node) => {
+        node.remove();
+      });
+      activePlayer = 0;
+      stopTimer();
+      setup();
     }
 
     function changeInputValue(ID, byValue) {
-        let target = document.getElementById(ID);
-        let newValue = parseInt(target.value)+parseInt(byValue);
-        if (newValue <= parseInt(target.max) && newValue >= parseInt(target.min)) {
-            target.value = newValue;
-        }
-        console.log("Hey");
+      let target = document.getElementById(ID);
+      let newValue = parseInt(target.value) + parseInt(byValue);
+      if (
+        newValue <= parseInt(target.max) &&
+        newValue >= parseInt(target.min)
+      ) {
+        target.value = newValue;
+      }
     }
 
     function saveSettings() {
-        players = parseInt(document.getElementById("players").value);
-        let h = parseInt(document.getElementById("hours").value);
-        let min = parseInt(document.getElementById("minutes").value);
-        let s = parseInt(document.getElementById("seconds").value);
-        time = 60*60*h+60*min+s;
-        reset();
-        closeMenu();
+      players = parseInt(document.getElementById("players").value);
+      let h = parseInt(document.getElementById("hours").value);
+      let min = parseInt(document.getElementById("minutes").value);
+      let s = parseInt(document.getElementById("seconds").value);
+      time = 60 * 60 * h + 60 * min + s;
+      reset();
+      closeMenu();
     }
 
     function openNameMenu() {
-        let nameMenu = document.getElementById("playerNames");
-        nameMenu.classList.remove("d-none");
-        
-        closeMenu();
+      let nameMenu = document.getElementById("playerNames");
+      nameMenu.classList.remove("d-none");
+
+      closeMenu();
     }
 
     function closeNameMenu() {
-        let nameMenu = document.getElementById("playerNames");
-        nameMenu.classList.add("d-none");
-        openMenu();
+      let nameMenu = document.getElementById("playerNames");
+      nameMenu.classList.add("d-none");
+      openMenu();
     }
 
     function saveNames() {
-        for (let i=0; i<players; i++) {
-            playerList[i] = document.getElementById("nameInput"+i).value;
-            document.getElementById("playerName"+i).innerText = playerList[i];
-        }
-        closeNameMenu();
+      for (let i = 0; i < players; i++) {
+        playerList[i] = document.getElementById("nameInput" + i).value;
+        document.getElementById("playerName" + i).innerText = playerList[i];
+      }
+      closeNameMenu();
     }
 
     window.onload = (event) => {
-        setup();
-    }
-</script>
+      setup();
+    };
+  </script>
 
-<body>
-    <div id="timerLayer">
-        
-    </div>
+  <body>
+    <div id="timerLayer"></div>
     <div id="controls" class="d-grid gap-2">
-        <button id="toggleTimerButton" onclick="toggleState();" class="btn btn-primary" type="button">Start</button>
-        <button id="resetTimerButton" onclick="reset();" class="btn btn-primary" type="button">Reset</button>
-        <button id="openMenuButton" onclick="openMenu();" class="btn btn-primary" type="button">Menü</button>
-    </div>    
+      <button
+        id="toggleTimerButton"
+        onclick="toggleState();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Start
+      </button>
+      <button
+        id="resetTimerButton"
+        onclick="reset();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Reset
+      </button>
+      <button
+        id="openMenuButton"
+        onclick="openMenu();"
+        class="btn btn-primary"
+        type="button"
+      >
+        Menü
+      </button>
+    </div>
     <div id="menuLayer" class="d-none menu">
-        <div class="d-flex justify-content-end">
-            <button id="closeMenuButton" class="btn-close" aria-label="Close" onclick="closeMenu();"></button>
+      <div class="d-flex justify-content-end">
+        <button
+          id="closeMenuButton"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closeMenu();"
+        ></button>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>Spieleranzahl</h3>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessPlayers"
+              onclick="changeInputValue('players', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="players"
+              min="2"
+              max="10"
+              class="form-control"
+              placeholder="Spieleranzahl"
+              aria-label="Spieleranzahl"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="morePlayers"
+              onclick="changeInputValue('players', 1)"
+            >
+              +1
+            </button>
+          </div>
+          <div class="d-grid">
+            <button
+              id="playerNameMenu"
+              onclick="openNameMenu();"
+              class="btn btn-primary"
+              type="button"
+            >
+              Spielernamen
+            </button>
+          </div>
         </div>
-        
-        <div class="row">
-            <div class="col-sm-6">
-                <h3>Spieleranzahl</h3>
-                <div class="input-group mb-3">
-                    <button class="btn btn-outline-secondary" type="button" id="lessPlayers" onclick="changeInputValue('players', -1)">-1</button>
-                    <input type="number" id="players" min="2" max="10" class="form-control" placeholder="Spieleranzahl" aria-label="Spieleranzahl">
-                    <button class="btn btn-outline-secondary" type="button" id="morePlayers" onclick="changeInputValue('players', 1)">+1</button>
-                </div>
-                <div class="d-grid">
-                    <button id="playerNameMenu" onclick="openNameMenu();" class="btn btn-primary" type="button">Spielernamen</button>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <h3>Timer</h3>
-                <div class="input-group mb-3">
-                    <button class="btn btn-outline-secondary" type="button" id="lessHours10" onclick="changeInputValue('hours', -10)">-10</button>
-                    <button class="btn btn-outline-secondary" type="button" id="lessHours" onclick="changeInputValue('hours', -1)">-1</button>
-                    <input type="number" id="hours" min="0" max="24" class="form-control" placeholder="Stunden" aria-label="Stunden">
-                    <button class="btn btn-outline-secondary" type="button" id="moreHours" onclick="changeInputValue('hours', 1)">+1</button>
-                    <button class="btn btn-outline-secondary" type="button" id="moreHours10" onclick="changeInputValue('hours', 10)">+10</button>
-                </div>
-                <div class="input-group mb-3">
-                    <button class="btn btn-outline-secondary" type="button" id="lessMinutes10" onclick="changeInputValue('minutes', -10)">-10</button>
-                    <button class="btn btn-outline-secondary" type="button" id="lessMinutes" onclick="changeInputValue('minutes', -1)">-1</button>
-                    <input type="number" id="minutes" min="0" max="60" class="form-control" placeholder="Minuten" aria-label="Minuten">
-                    <button class="btn btn-outline-secondary" type="button" id="moreMInutes" onclick="changeInputValue('minutes', 1)">+1</button>
-                    <button class="btn btn-outline-secondary" type="button" id="moreMInutes10" onclick="changeInputValue('minutes', 10)">+10</button>
-                </div>
-                <div class="input-group mb-3">
-                    <button class="btn btn-outline-secondary" type="button" id="lessSeconds10" onclick="changeInputValue('seconds', -10)">-10</button>
-                    <button class="btn btn-outline-secondary" type="button" id="lessSeconds" onclick="changeInputValue('seconds', -1)">-1</button>
-                    <input type="number" id="seconds" min="0" max="60" class="form-control" placeholder="Sekunden" aria-label="Sekunden">
-                    <button class="btn btn-outline-secondary" type="button" id="moreSeconds" onclick="changeInputValue('seconds', 1)">+1</button>
-                    <button class="btn btn-outline-secondary" type="button" id="moreSeconds10" onclick="changeInputValue('seconds', 10)">+10</button>
-                </div>
-            </div>
+        <div class="col-sm-6">
+          <h3>Timer</h3>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessHours10"
+              onclick="changeInputValue('hours', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessHours"
+              onclick="changeInputValue('hours', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="hours"
+              min="0"
+              max="24"
+              class="form-control"
+              placeholder="Stunden"
+              aria-label="Stunden"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreHours"
+              onclick="changeInputValue('hours', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreHours10"
+              onclick="changeInputValue('hours', 10)"
+            >
+              +10
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessMinutes10"
+              onclick="changeInputValue('minutes', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessMinutes"
+              onclick="changeInputValue('minutes', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="minutes"
+              min="0"
+              max="60"
+              class="form-control"
+              placeholder="Minuten"
+              aria-label="Minuten"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreMInutes"
+              onclick="changeInputValue('minutes', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreMInutes10"
+              onclick="changeInputValue('minutes', 10)"
+            >
+              +10
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessSeconds10"
+              onclick="changeInputValue('seconds', -10)"
+            >
+              -10
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="lessSeconds"
+              onclick="changeInputValue('seconds', -1)"
+            >
+              -1
+            </button>
+            <input
+              type="number"
+              id="seconds"
+              min="0"
+              max="60"
+              class="form-control"
+              placeholder="Sekunden"
+              aria-label="Sekunden"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreSeconds"
+              onclick="changeInputValue('seconds', 1)"
+            >
+              +1
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="moreSeconds10"
+              onclick="changeInputValue('seconds', 10)"
+            >
+              +10
+            </button>
+          </div>
         </div>
-        <div class="d-grid">
-            <button id="saveAndClose" onclick="saveSettings();" class="btn btn-primary" type="button">Speichern & Schließen</button>
-        </div>
+      </div>
+      <div class="d-grid">
+        <button
+          id="saveAndClose"
+          onclick="saveSettings();"
+          class="btn btn-primary"
+          type="button"
+        >
+          Speichern & Schließen
+        </button>
+      </div>
     </div>
     <div id="playerNames" class="d-none menu">
-        <div class="d-flex justify-content-end">
-            <button id="closeNameButton" class="btn-close" aria-label="Close" onclick="closeNameMenu();"></button>
-        </div>
-        <div id="playerNameForm"></div>
-        <div class="d-grid">
-            <button id="saveNames" onclick="saveNames();" class="btn btn-primary" type="button">Speichern & Schließen</button>
-        </div>
+      <div class="d-flex justify-content-end">
+        <button
+          id="closeNameButton"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closeNameMenu();"
+        ></button>
+      </div>
+      <div id="playerNameForm"></div>
+      <div class="d-grid">
+        <button
+          id="saveNames"
+          onclick="saveNames();"
+          class="btn btn-primary"
+          type="button"
+        >
+          Speichern & Schließen
+        </button>
+      </div>
     </div>
-</body>
+  </body>
 </html>

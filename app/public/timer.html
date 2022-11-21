@@ -47,7 +47,7 @@
       .playerBoard a.active {
         box-shadow: inset 0 0 10px #222;
       }
-      
+
       .playerBoard .timeDisplay {
         height: 50%;
         transform: translate(0, calc(100% - 2rem));
@@ -55,12 +55,12 @@
 
       @media (min-width: 992px) {
         .playerBoard {
-        font-size: 3rem;
-      }
-      
-      .playerBoard .timeDisplay {
-        transform: translate(0, calc(100% - 3rem));
-      }
+          font-size: 3rem;
+        }
+
+        .playerBoard .timeDisplay {
+          transform: translate(0, calc(100% - 3rem));
+        }
       }
 
       #playerBoard0 {
@@ -110,7 +110,7 @@
         left: 2rem;
         width: calc(100% - 4rem);
       }
-      
+
       .playername.right {
         right: calc(-100% + 10rem);
       }
@@ -150,7 +150,7 @@
         height: 20vh;
       }
 
-      #timerLayer .row>* {
+      #timerLayer .row > * {
         padding: 0;
       }
 
@@ -431,8 +431,7 @@
       });
 
       socket.on("timer status updated", function (state) {
-        toggleTimerButton.innerHTML =
-          chooseStartStopButtonLabel(state);
+        toggleTimerButton.innerHTML = chooseStartStopButtonLabel(state);
       });
 
       socket.on("active player changes", function (playerID) {
@@ -440,7 +439,8 @@
         document.getElementsByClassName("active")[0].classList.remove("active");
         document
           .getElementById("playerBoard" + playerID)
-          .getElementsByClassName("changePlayerField")[0].classList.add("active");
+          .getElementsByClassName("changePlayerField")[0]
+          .classList.add("active");
       });
 
       socket.on("player timer display update", function (tuple) {
@@ -455,9 +455,9 @@
       socket.on("changed playernames", function (playerList) {
         let playerNumber = playerList.length;
 
-        for (let i=0; i<playerNumber; i++) {
-          document.getElementById("playerName"+i).innerText = playerList[i];
-          document.getElementById("nameInput"+i).value = playerList[i];
+        for (let i = 0; i < playerNumber; i++) {
+          document.getElementById("playerName" + i).innerText = playerList[i];
+          document.getElementById("nameInput" + i).value = playerList[i];
         }
       });
 
@@ -487,15 +487,14 @@
 
       function setup(timer) {
         console.log(timer);
-        document.querySelectorAll("#timerLayer .row").forEach(node => {
-            node.remove();
-        })
-        document.querySelectorAll("#playerNameForm .row").forEach(node => {
-            node.remove();
-        })
+        document.querySelectorAll("#timerLayer .row").forEach((node) => {
+          node.remove();
+        });
+        document.querySelectorAll("#playerNameForm .row").forEach((node) => {
+          node.remove();
+        });
 
-        toggleTimerButton.innerHTML =
-          chooseStartStopButtonLabel(timer.state);
+        toggleTimerButton.innerHTML = chooseStartStopButtonLabel(timer.state);
         fillMenuInputs(timer);
 
         let row;
@@ -515,17 +514,14 @@
           }
 
           let playerBoard = document.createElement("div");
-          playerBoard.classList.add(
-            "col",
-            "playerBoard"
-          );
+          playerBoard.classList.add("col", "playerBoard");
           playerBoard.id = "playerBoard" + i;
           row.appendChild(playerBoard);
 
           let name = document.createElement("p");
           name.innerText = timer.playerList[i];
           name.classList.add("playername");
-          if (i%2 == 0) name.classList.add("text-start");
+          if (i % 2 == 0) name.classList.add("text-start");
           else name.classList.add("text-end");
           name.id = "playerName" + i;
           playerBoard.append(name);
@@ -557,7 +553,8 @@
 
         document
           .getElementById("playerBoard" + timer.activePlayer)
-          .getElementsByClassName("changePlayerField")[0].classList.add("active");
+          .getElementsByClassName("changePlayerField")[0]
+          .classList.add("active");
       }
 
       function setPlayer(playerID) {
@@ -601,61 +598,63 @@
       }
 
       function openMenu() {
-        
         menu.classList.remove("d-none");
-    }
+      }
 
-    function closeMenu() {
-      menu.classList.add("d-none");
-    }
+      function closeMenu() {
+        menu.classList.add("d-none");
+      }
 
-    function changeInputValue(ID, byValue) {
+      function changeInputValue(ID, byValue) {
         let target = document.getElementById(ID);
-        let newValue = parseInt(target.value)+parseInt(byValue);
-        if (newValue <= parseInt(target.max) && newValue >= parseInt(target.min)) {
-            target.value = newValue;
+        let newValue = parseInt(target.value) + parseInt(byValue);
+        if (
+          newValue <= parseInt(target.max) &&
+          newValue >= parseInt(target.min)
+        ) {
+          target.value = newValue;
         }
-    }
+      }
 
-    function saveSettings() {
+      function saveSettings() {
         let playerNumber = parseInt(document.getElementById("players").value);
         let h = parseInt(document.getElementById("hours").value);
         let min = parseInt(document.getElementById("minutes").value);
         let s = parseInt(document.getElementById("seconds").value);
-        let time = 60*60*h+60*min+s;
+        let time = 60 * 60 * h + 60 * min + s;
         setPlayerNumber(playerNumber);
         setTime(time);
         reset();
         closeMenu();
-    }
+      }
 
-    function setPlayerNumber(playerNumber) {
-      socket.emit("set player number", playerNumber);
-    }
+      function setPlayerNumber(playerNumber) {
+        socket.emit("set player number", playerNumber);
+      }
 
-    function setTime(time) {
-      socket.emit("set time", time);
-    }
+      function setTime(time) {
+        socket.emit("set time", time);
+      }
 
-    function openNameMenu() {
+      function openNameMenu() {
         nameMenu.classList.remove("d-none");
         closeMenu();
-    }
+      }
 
-    function closeNameMenu() {
+      function closeNameMenu() {
         nameMenu.classList.add("d-none");
         openMenu();
-    }
+      }
 
-    function saveNames() {
-      let playerNumber = document.querySelectorAll(".playerBoard").length;
-      let playerList = Array(playerNumber);
-        for (let i=0; i<playerNumber; i++) {
-            playerList[i] = document.getElementById("nameInput"+i).value;
-            socket.emit("changed playernames", playerList);
+      function saveNames() {
+        let playerNumber = document.querySelectorAll(".playerBoard").length;
+        let playerList = Array(playerNumber);
+        for (let i = 0; i < playerNumber; i++) {
+          playerList[i] = document.getElementById("nameInput" + i).value;
+          socket.emit("changed playernames", playerList);
         }
         closeNameMenu();
-    }
+      }
     </script>
   </body>
 </html>
