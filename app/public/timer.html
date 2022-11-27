@@ -477,11 +477,17 @@
       }
 
       function getTimeTriple(time) {
-        let h = Math.floor(time / 60 / 60);
-        let min = Math.floor((time - h * 60 * 60) / 60);
-        let s = Math.floor(time - h * 60 * 60 - min * 60);
+        let t = Math.abs(time);
+        let h = Math.floor(t / 60 / 60);
+        let min = Math.floor((t - h * 60 * 60) / 60);
+        let s = Math.floor(t - h * 60 * 60 - min * 60);
+        
+        let sign = "";
+        if (time < 0) {
+          sign = "-";
+        }
 
-        const timeTripel = { h: h, min: min, s: s };
+        const timeTripel = {sign: sign, h: h, min: min, s: s };
         return timeTripel;
       }
 
@@ -565,14 +571,15 @@
         let h = timeTripel.h;
         let min = timeTripel.min;
         let s = timeTripel.s;
+        let sign = timeTripel.sign;
 
         if (h == 0) {
           if (min == 0) {
-            return s.toString().padStart(2, "0") + " s";
+            return sign+s.toString().padStart(2, "0") + " s";
           }
 
           return (
-            min.toString().padStart(2, "0") +
+            sign+min.toString().padStart(2, "0") +
             ":" +
             s.toString().padStart(2, "0") +
             " min"
@@ -580,7 +587,7 @@
         }
 
         return (
-          h.toString().padStart(2, "0") +
+          sign+h.toString().padStart(2, "0") +
           ":" +
           min.toString().padStart(2, "0") +
           ":" +
