@@ -1,0 +1,83 @@
+h6 {
+  font-weight: bolder;
+}
+
+.questiontestslink + .filter_mathjaxloader_equation::before {
+  content: "\A";
+  white-space: pre;
+}
+
+.que .badge-pill {
+  border-radius: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+.que .card {
+  border-radius: 0.5em;
+  margin-bottom: 1em;
+  overflow: hidden;
+  max-width: 70rem;
+}
+.que .attachments .card {
+  border-radius: inherit;
+  margin-bottom: inherit;
+  overflow: inherit;
+  max-width: inherit;
+}
+.card-img-top {
+  border-radius: 0.5em 0.5em 0 0;
+}
+.card-img-top {
+  max-height: 300px;
+  object-fit: cover;
+}
+.card-vid-bottom {
+  border-radius: 0em 0em 0.5em 0.5em;
+}
+.accordion {
+  background-color: none;
+  border-radius: 0.5em;
+  overflow: hidden;
+}
+.que .btn {
+  border-radius: 0.5em;
+}
+.btn-outline-dark {
+  font-weight: bold;
+}
+
+.neuer-begriff {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #76b900;
+}
+.infobox {
+  background-color: rgb(255, 245, 211);
+}
+.zwischenschritt {
+  display: none;
+}
+.stackprtfeedback {
+  /* width: 100%; */
+  border-radius: 0.5em;
+}
+.tag-einleitung {
+  background-color: rgb(178, 190, 195);
+  color: #fff;
+}
+.debug {
+  display: none;
+}
+/* .correct, .incorrect {
+  padding: 0.5em;
+} */
+
+.wertetabelle td {
+  padding-right: 0.5em;
+}
+
+.bordered_table table, .bordered_table th, .bordered_table td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 0 0.25em;
+}
